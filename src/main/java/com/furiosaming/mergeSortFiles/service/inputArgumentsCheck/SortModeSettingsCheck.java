@@ -1,4 +1,4 @@
-package com.furiosaming.mergeSortFiles.service.service;
+package com.furiosaming.mergeSortFiles.service.inputArgumentsCheck;
 
 import com.furiosaming.mergeSortFiles.persistence.enums.SortMode;
 import com.furiosaming.mergeSortFiles.persistence.enums.TypeOfElements;
@@ -8,8 +8,7 @@ import com.furiosaming.mergeSortFiles.service.response.Response;
 
 import java.util.regex.Pattern;
 
-public class SortModeSettingService {
-
+public class SortModeSettingsCheck {
     public static Response<Sort> setSortParameters(String[] args, Sort sort){
         for(String arg: args) {
             if (isTypeOfElements(arg)) {
@@ -59,4 +58,3 @@ public class SortModeSettingService {
         return new Response.Builder<Sort>().success(sort, AppConstants.success).build();
     }
 }
-

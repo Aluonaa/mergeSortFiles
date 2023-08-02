@@ -1,4 +1,4 @@
-package com.furiosaming.mergeSortFiles.service.service;
+package com.furiosaming.mergeSortFiles.service.inputArgumentsCheck;
 
 import com.furiosaming.mergeSortFiles.persistence.model.Sort;
 import com.furiosaming.mergeSortFiles.service.constants.AppConstants;
@@ -7,14 +7,13 @@ import com.furiosaming.mergeSortFiles.service.response.Response;
 import java.io.File;
 import java.util.regex.Pattern;
 
-public class FilesSearchService {
-
+public class FilesExistenceCheck {
     public static Response<Sort> searchFilesInCommandLineArguments(String[] args, Sort sort){
 
         for(String arg: args){
             if(isOutFile(arg)){
                 sort.setOutputFile(new File(arg));
-                }
+            }
             else if(isInputFile(arg)){
                 sort.getFiles().add(new File(arg));
             }
@@ -43,5 +42,4 @@ public class FilesSearchService {
         }
         return new Response.Builder<Sort>().success(sort, AppConstants.success).build();
     }
-
 }

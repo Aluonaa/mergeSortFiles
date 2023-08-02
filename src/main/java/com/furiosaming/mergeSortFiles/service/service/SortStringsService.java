@@ -1,6 +1,7 @@
 package com.furiosaming.mergeSortFiles.service.service;
 
 import com.furiosaming.mergeSortFiles.persistence.model.Sort;
+import com.furiosaming.mergeSortFiles.service.inputArgumentsCheck.FilesEmptinessCheck;
 import com.furiosaming.mergeSortFiles.service.response.Response;
 
 import java.io.*;
@@ -15,7 +16,7 @@ public class SortStringsService {
         File resultFile = null;
         int sortFilesCount = sort.getFiles().size();
 
-        currentFile = findFirstFile(sort, currentFile);
+        currentFile = FilesEmptinessCheck.findFirstNotEmptyFile(sort, currentFile);
         if(currentFile > sortFilesCount){
             return new Response.Builder<Sort>().allFilesAreEmpty().build();
         }
@@ -28,47 +29,6 @@ public class SortStringsService {
         }
     }
 
-    public static Integer findFirstFile(Sort sort, int currentFile){
-        try(BufferedReader reader = new BufferedReader(new FileReader(sort.getFiles().get(currentFile)));
-            FileWriter fileWriter = new FileWriter(new File("out"+currentFile+".txt"))){
-            String currentMaxElement;
-            String line;
-            while (true){
-                line = reader.readLine();
-                //Если файл пустой, проверяем следующий файл на наличие элементов
-                if (line == null){
-                    if(currentFile+1 > sort.getFiles().size()){
-                        return currentFile+1;
-                    }
-                    currentFile +=1;
-                    findFirstFile(sort, currentFile);
-                }
-                else {
-                    if(line.contains(" ")){
-                        continue;
-                    }
-                    fileWriter.write(line+"\r\n");
-                    // Текущий максимальный элемент это первая строка файла
-                    currentMaxElement = line;
-                    break;
-                }
-            }
-
-            while (true){
-                line = reader.readLine();
-                if(line == null || currentMaxElement.compareTo(line) > 0){
-                    break;
-                }
-                else {
-                    fileWriter.write(line+"\r\n");
-                }
-            }
-        }
-            catch (IOException ioException){
-            ioException.printStackTrace();
-        }
-            return currentFile+1;
-    }
 
     public static File nextFiles(Sort sort, int currentFile, File previousFile){
         try(BufferedReader reader1 = new BufferedReader(new FileReader(previousFile));
@@ -83,7 +43,7 @@ public class SortStringsService {
             while (true){
                 line2 = reader2.readLine();
                 if(line2 != null && line2.contains(" ")){
-                    continue;
+
                 }
                 else {
                     currentMinElementOfCurrentFile = line2;
@@ -115,7 +75,7 @@ public class SortStringsService {
 
             while (true){
                 if(line2 != null && line2.contains(" ")){
-                    continue;
+
                 }
                 else {
                     if(line1 == null && line2 == null){
